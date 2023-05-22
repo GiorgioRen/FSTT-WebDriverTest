@@ -2,6 +2,7 @@ package login_refactor;
 
 import java.util.concurrent.TimeUnit;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +15,7 @@ public class DriverLifeCycleSetting {
 	
 	@BeforeAll
 	public static void setupClass() {
-		System.setProperty("webdriver.chrome.driver", "library/chromedriver");
+		WebDriverManager.chromedriver().setup();
 	}
 	
 	@BeforeEach
