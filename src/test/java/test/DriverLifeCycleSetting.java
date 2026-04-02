@@ -14,13 +14,14 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 public class DriverLifeCycleSetting {
 
 	protected WebDriver driver;
+	private static String chromeBinaryPath;
 
 	@BeforeAll
 	public static void beforeAll() {
 		WebDriverManager wdm = WebDriverManager.chromedriver();
-		String chromePath = System.getenv("CHROME_PATH");
-		if (chromePath != null && !chromePath.isEmpty()) {
-			wdm.browserBinary(chromePath);
+		chromeBinaryPath = System.getenv("CHROME_PATH");
+		if (chromeBinaryPath != null && !chromeBinaryPath.isEmpty()) {
+			wdm.browserBinary(chromeBinaryPath);
 		}
 		wdm.setup();
 	}
@@ -28,6 +29,9 @@ public class DriverLifeCycleSetting {
 	@BeforeEach
 	public void beforeEach() {
 		ChromeOptions options = new ChromeOptions();
+		if (chromeBinaryPath != null && !chromeBinaryPath.isEmpty()) {
+			options.setBinary(chromeBinaryPath);
+		}
 		options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
 		driver = new ChromeDriver(options);
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
