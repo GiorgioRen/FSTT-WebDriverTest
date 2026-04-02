@@ -1,7 +1,6 @@
 package test;
 
 import java.time.Duration;
-import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,13 +17,18 @@ public class DriverLifeCycleSetting {
 
 	@BeforeAll
 	public static void beforeAll() {
-		WebDriverManager.chromedriver().setup();
+		WebDriverManager wdm = WebDriverManager.chromedriver();
+		String chromePath = System.getenv("CHROME_PATH");
+		if (chromePath != null && !chromePath.isEmpty()) {
+			wdm.browserBinary(chromePath);
+		}
+		wdm.setup();
 	}
 
 	@BeforeEach
 	public void beforeEach() {
 		ChromeOptions options = new ChromeOptions();
-		options.addArguments("--headless");
+		options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
 		driver = new ChromeDriver(options);
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 	}

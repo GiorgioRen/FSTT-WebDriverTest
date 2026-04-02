@@ -29,10 +29,13 @@ jobs:
         cache: maven
     
     - uses: browser-actions/setup-chrome@latest
-    - run: chrome --version
+      id: setup-chrome
+    - run: ${{ steps.setup-chrome.outputs.chrome-path }} --version
     
     - name: Build with Maven
       run: mvn -B clean test
+      env:
+        CHROME_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     #- name: Update dependency graph
